@@ -10,6 +10,7 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/oracle/oci-go-sdk/v65/common"
+	"github.com/oracle/oci-go-sdk/v65/common/auth"
 	"github.com/oracle/oci-go-sdk/v65/core"
 )
 
@@ -39,7 +40,11 @@ func main() {
 		log.Fatal(err)
 	}
 
-	configProvider := common.DefaultConfigProvider()
+	configProvider, err := getConfigurationProvider()
+	if err != nil {
+		log.Fatalf("Failed to create configuration provider: %v", err)
+	}
+
 	computeClient, err := core.NewComputeClientWithConfigurationProvider(configProvider)
 	if err != nil {
 		log.Fatalf("Failed to create compute client: %v", err)
@@ -55,6 +60,20 @@ func main() {
 		log.Printf("Waiting for %d seconds before next attempt...", config.RetryDelay)
 		time.Sleep(time.Duration(config.RetryDelay) * time.Second)
 	}
+}
+
+func getConfigurationProvider() (common.ConfigurationProvider, error) {
+	// 1. Try Instance Principal (for OCI Instances)
+	provider, err := auth.InstancePrincipalConfigurationProvider()
+	if err == nil {
+		log.Println("Using Instance Principal for authentication.")
+		return provider, nil
+	}
+	log.Printf("Instance Principal not available: %v. Falling back to default config provider.", err)
+
+	// 2. Fallback to default config provider (~/.oci/config)
+	log.Println("Using default config provider (~/.oci/config).")
+	return common.DefaultConfigProvider(), nil
 }
 
 func loadConfig() (Config, error) {
@@ -73,12 +92,12 @@ func loadConfig() (Config, error) {
 	peekBeforeLaunch := strings.ToLower(os.Getenv("PEEK_BEFORE_LAUNCH")) == "true"
 
 	config := Config{
-		CompartmentID:      os.Getenv("COMPARTMENT_ID"),
-		SubnetID:           os.Getenv("SUBNET_ID"),
-		ImageID:            os.Getenv("IMAGE_ID"),
-		SSHPublicKey:       os.Getenv("SSH_PUBLIC_KEY"),
-		AvailabilityDomain: os.Getenv("AVAILABILITY_DOMAIN"),
-		DisplayName:        os.Getenv("DISPLAY_NAME"),
+		CompartmentID:      os.Getenv("OCI_COMPARTMENT_ID"),
+		SubnetID:           os.Getenv("OCI_SUBNET_ID"),
+		ImageID:            os.Getenv("OCI_IMAGE_ID"),
+		SSHPublicKey:       os.Getenv("OCI_SSH_PUBLIC_KEY"),
+		AvailabilityDomain: os.Getenv("OCI_AVAILABILITY_DOMAIN"),
+		DisplayName:        os.Getenv("OCI_DISPLAY_NAME"),
 		OCPUs:              float32(ocpus),
 		Memory:             float32(memory),
 		RetryDelay:         retryDelay,

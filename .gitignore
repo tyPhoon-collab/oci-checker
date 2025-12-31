@@ -7,9 +7,15 @@
 *.test
 *.out
 
-# Project binary name (assuming folder name or common output)
+# Binaries
 oci-checker
 main
+
+# Environments
+.env
+
+# Toolchains
+/.mise.toml
 
 # Environment Variables
 .env
