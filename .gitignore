@@ -1,0 +1,25 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Project binary name (assuming folder name or common output)
+oci-checker
+main
+
+# Environment Variables
+.env
+
+# Modules and Vendor
+vendor/
+
+# IDE and OS Files
+.vscode/
+.idea/
+.DS_Store
+*.swp
+*.swo
