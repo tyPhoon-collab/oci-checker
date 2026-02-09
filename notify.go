@@ -21,7 +21,7 @@ func notifyDiscord(config Config, instanceOCID string) {
 		"color":       0x00FF00,
 		"fields": []map[string]interface{}{
 			{"name": "Name", "value": config.DisplayName, "inline": true},
-			{"name": "Shape", "value": InstanceShape, "inline": true},
+			{"name": "Shape", "value": config.Shape, "inline": true},
 			{"name": "OCPUs", "value": strconv.FormatFloat(float64(config.OCPUs), 'f', 0, 32), "inline": true},
 			{"name": "Memory (GB)", "value": strconv.FormatFloat(float64(config.Memory), 'f', 0, 32), "inline": true},
 			{"name": "Availability Domain", "value": config.AvailabilityDomain, "inline": false},

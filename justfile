@@ -11,7 +11,7 @@ deploy: build
 
 # Run locally (for testing)
 run:
-    go run main.go
+    go run .
 
 # Check logs on server (requires DEPLOY_TARGET to be user@host:path)
 logs:

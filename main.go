@@ -9,10 +9,6 @@ import (
 	"github.com/oracle/oci-go-sdk/v65/core"
 )
 
-const (
-	InstanceShape = "VM.Standard.A1.Flex"
-)
-
 func main() {
 	godotenv.Load()
 

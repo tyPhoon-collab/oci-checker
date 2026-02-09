@@ -15,6 +15,7 @@ type Config struct {
 	SSHPublicKey       string
 	AvailabilityDomain string
 	DisplayName        string
+	Shape              string
 	OCPUs              float32
 	Memory             float32
 	RetryDelay         int
@@ -25,6 +26,10 @@ type Config struct {
 
 // loadConfig reads configuration from environment variables
 func loadConfig() (Config, error) {
+	shape := os.Getenv("OCI_SHAPE")
+	if shape == "" {
+		shape = "VM.Standard.A1.Flex"
+	}
 	ocpusStr := os.Getenv("OCPUS")
 	memoryStr := os.Getenv("MEMORY_IN_GBS")
 	retryDelayStr := os.Getenv("RETRY_DELAY")
@@ -46,6 +51,7 @@ func loadConfig() (Config, error) {
 		SSHPublicKey:       os.Getenv("OCI_SSH_PUBLIC_KEY"),
 		AvailabilityDomain: os.Getenv("OCI_AVAILABILITY_DOMAIN"),
 		DisplayName:        os.Getenv("OCI_DISPLAY_NAME"),
+		Shape:              shape,
 		OCPUs:              float32(ocpus),
 		Memory:             float32(memory),
 		RetryDelay:         retryDelay,

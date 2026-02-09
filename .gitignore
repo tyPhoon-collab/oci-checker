@@ -12,13 +12,11 @@ oci-checker
 main
 
 # Environments
-.env
+.env*
+!.env.example
 
 # Toolchains
 /.mise.toml
-
-# Environment Variables
-.env
 
 # Modules and Vendor
 vendor/

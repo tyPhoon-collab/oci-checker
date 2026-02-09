@@ -1,9 +1,10 @@
 # OCI Checker
 
-Oracle Cloud Infrastructure (OCI) の ARM インスタンス (Always Free A1.Flex) を自動で作成・チェックする Go 製ツールです。
+Oracle Cloud Infrastructure (OCI) の ARM インスタンス (Always Free A1.Flex) や AMD インスタンス (Always Free E2.1.Micro) を自動で作成・チェックする Go 製ツールです。
 
 ## 特徴
 
+- **マルチアーキテクチャ対応**: A1.Flex (ARM) に加え、E2.1.Micro (AMD) にも対応。
 - **リソース節約**: ローカルでビルドし、サーバー上ではバイナリを直接実行。
 - **KISS 認証**: サーバー上では Instance Principal を使用するため、秘密鍵の転送や管理が不要です。
 - **簡単デプロイ**: `just deploy` 一発でサーバーへ転送。
@@ -30,7 +31,11 @@ Oracle Cloud Infrastructure (OCI) の ARM インスタンス (Always Free A1.Fle
 2. **ローカルでの設定**:
    - `.env` を作成し、リソースの OCID 等を設定します。
    ```bash
+   # A1.Flex (ARM) の場合
    cp .env.example .env
+
+   # E2.1.Micro (AMD) の場合
+   cp .env.e2 .env
    ```
 
 ## 環境変数
@@ -39,23 +44,25 @@ Oracle Cloud Infrastructure (OCI) の ARM インスタンス (Always Free A1.Fle
 
 ### インスタンス設定（必須）
 
-| 変数名 | 説明 |
-|--------|------|
-| `OCI_COMPARTMENT_ID` | コンパートメント（またはテナンシー）のOCID |
-| `OCI_SUBNET_ID` | サブネットのOCID |
-| `OCI_IMAGE_ID` | イメージのOCID |
-| `OCI_AVAILABILITY_DOMAIN` | 可用性ドメイン (例: `UlBA:AP-TOKYO-1-AD-1`) |
-| `OCI_SSH_PUBLIC_KEY` | インスタンスに登録する SSH 公開鍵 |
-| `OCI_DISPLAY_NAME` | 作成するインスタンスの表示名 |
+| 変数名 | デフォルト | 説明 |
+|--------|----------|------|
+| `OCI_SHAPE` | `VM.Standard.A1.Flex` | インスタンスのシェイプ |
+| `OCI_COMPARTMENT_ID` | - | コンパートメント（またはテナンシー）のOCID |
+| `OCI_SUBNET_ID` | - | サブネットのOCID |
+| `OCI_IMAGE_ID` | - | イメージのOCID |
+| `OCI_AVAILABILITY_DOMAIN` | - | 可用性ドメイン (例: `UlBA:AP-TOKYO-1-AD-1`) |
+| `OCI_SSH_PUBLIC_KEY` | - | インスタンスに登録する SSH 公開鍵 |
+| `OCI_DISPLAY_NAME` | `oci-checker` | 作成するインスタンスの表示名 |
 
 ### 動作設定（オプション）
 
 | 変数名 | デフォルト | 説明 |
 |--------|----------|------|
-| `OCPUS` | 4 | OCPU数 |
-| `MEMORY_IN_GBS` | 24 | メモリ (GB) |
+| `OCPUS` | 4 | OCPU数 (A1.Flex のみ有効) |
+| `MEMORY_IN_GBS` | 24 | メモリ (GB) (A1.Flex のみ有効) |
 | `RETRY_DELAY` | 60 | リトライ間隔（秒） |
 | `CHECK_ONLY` | false | キャパシティ確認のみ実行 |
+| `PEEK_BEFORE_LAUNCH` | false | 起動前に空き容量を確認 |
 
 ## 使い方
 

@@ -30,7 +30,7 @@ func attempt(ctx context.Context, client core.ComputeClient, config Config) bool
 			CompartmentId:      common.String(config.CompartmentID),
 			AvailabilityDomain: common.String(config.AvailabilityDomain),
 			DisplayName:        common.String(config.DisplayName),
-			Shape:              common.String(InstanceShape),
+			Shape:              common.String(config.Shape),
 			ShapeConfig: &core.LaunchInstanceShapeConfigDetails{
 				Ocpus:       common.Float32(config.OCPUs),
 				MemoryInGBs: common.Float32(config.Memory),
@@ -74,7 +74,7 @@ func checkCapacity(ctx context.Context, client core.ComputeClient, config Config
 			AvailabilityDomain: common.String(config.AvailabilityDomain),
 			ShapeAvailabilities: []core.CreateCapacityReportShapeAvailabilityDetails{
 				{
-					InstanceShape: common.String(InstanceShape),
+					InstanceShape: common.String(config.Shape),
 					InstanceShapeConfig: &core.CapacityReportInstanceShapeConfig{
 						Ocpus:       common.Float32(config.OCPUs),
 						MemoryInGBs: common.Float32(config.Memory),
